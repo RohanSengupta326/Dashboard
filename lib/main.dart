@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:dashboard/RefreshGraph.dart';
+import 'package:dashboard/map.dart';
+import 'package:dashboard/qBarChart.dart';
 import 'package:dashboard/timeLineChart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -94,7 +96,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    var refresh = Duration(seconds: 25);
+    var refresh = Duration(seconds: 15);
     Timer.periodic(refresh, (Timer t) => onRefresh());
     super.initState();
   }
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                   width: 100,
                   padding: EdgeInsets.all(10),
                   child: FittedBox(
-                      child: Text(DateFormat('dd/MMM/yy')
+                      child: Text(DateFormat('dd/MMM/yyyy')
                           .format(_dateTimeRange.value.start)))),
               const Text('    -->    '),
               Container(
@@ -126,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                 width: 100,
                 padding: const EdgeInsets.all(10),
                 child: FittedBox(
-                    child: Text(DateFormat('dd/MMM/yy')
+                    child: Text(DateFormat('dd/MMM/yyyy')
                         .format(_dateTimeRange.value.end))),
               )
             ],
@@ -201,7 +203,21 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getTimeRange(BuildContext context) async {
     final newTimeRange = await showTimeRangePicker(
-      backgroundWidget: GetPlatform.isDesktop ?  Container(height: 500, width: 500) : null,
+      builder: (context, child) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: Container(
+                height: 450,
+                width: 700,
+                child: child,
+              ),
+            ),
+          ],
+        );
+      },
       context: context,
       start: TimeOfDay(hour: 0, minute: 0),
       end: TimeOfDay.now(),
@@ -214,12 +230,15 @@ class _HomePageState extends State<HomePage> {
       minDuration: Duration(hours: 1),
       strokeWidth: 5,
       handlerRadius: 10,
+      labelStyle: TextStyle(fontSize: 25),
+      autoAdjustLabels: true,
       labels: ["24 h", "3 h", "6 h", "9 h", "12 h", "15 h", "18 h", "21 h"]
           .asMap()
           .entries
           .map((e) {
         return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
       }).toList(),
+      clockRotation: 180,
     );
 
     if (newTimeRange == null) {
@@ -398,9 +417,49 @@ class _HomePageState extends State<HomePage> {
                                     }),
                                   ),
                                 ])))),
+                    Container(
+                        height: 600,
+                        width: 700,
+                        padding: EdgeInsets.all(20),
+                        child: Card(
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(children: <Widget>[
+                                  const Text(
+                                    'Queues',
+                                    style: TextStyle(
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Expanded(
+                                    child: Obx(() {
+                                      return QbarChart(
+                                          x.value,
+                                          _timeRange.value.startTime
+                                              .format(context),
+                                          _timeRange.value.endTime
+                                              .format(context),
+                                          xAxis,
+                                          endInt,
+                                          check,
+                                          _dateTimeRange.value);
+                                    }),
+                                  ),
+                                ])))),
                   ],
                 ),
               ),
+              // IndianMap()
+              Container(
+                height: 600,
+                padding: const EdgeInsets.all(20),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MyWidget(),
+                  ),
+                ),
+              )
             ],
           ),
         ),
