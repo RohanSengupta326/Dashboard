@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:dashboard/RefreshGraph.dart';
-import 'package:dashboard/map.dart';
 import 'package:dashboard/qBarChart.dart';
 import 'package:dashboard/timeLineChart.dart';
 import 'package:flutter/material.dart';
@@ -394,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                     height: 10,
                   ),
                   def == -1
-                  // show default or not
+                      // show default or not
                       ? gotTimeRange(context)
                       : _dateTimeRange.value.start == _dateTimeRange.value.end
                           ? gotTimeRange(context)
@@ -516,17 +514,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               // IndianMap()
-              Container(
-                height: 600,
-                width: phoneWidth,
-                padding: const EdgeInsets.all(20),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text('map here')),
-                  ),
-                ),
-              )
+              // Container(
+              //   height: 1000,
+              //   width: phoneWidth,
+              //   padding: const EdgeInsets.all(20),
+              //   child: Card(
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: Text,
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),
