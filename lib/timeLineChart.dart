@@ -22,6 +22,7 @@ class TimeLineChart extends StatelessWidget {
             titleStyleSpec: charts.TextStyleSpec(
                 color: charts.MaterialPalette.green.shadeDefault),
             behaviorPosition: charts.BehaviorPosition.start),
+            // charts.BehaviorPosition.start is label at y axis
         charts.ChartTitle(
             checkMinHr == 0
                 ? 'Intervals of 5 Minutes'
@@ -31,15 +32,18 @@ class TimeLineChart extends StatelessWidget {
             titleStyleSpec: charts.TextStyleSpec(
                 color: charts.MaterialPalette.green.shadeDefault),
             behaviorPosition: charts.BehaviorPosition.bottom),
+            // charts.BehaviorPosition.bottom is label at x axis
       ],
       _createSampleData(),
       animate: true,
       animationDuration: const Duration(seconds: 3),
       defaultRenderer: charts.BarRendererConfig(
         maxBarWidthPx: 5,
+        // bar width
       ),
       primaryMeasureAxis: const charts.NumericAxisSpec(
         viewport: charts.NumericExtents(0, 270),
+        // y axis from  0 to 270 fixed
         tickProviderSpec:
             charts.BasicNumericTickProviderSpec(desiredTickCount: 20),
       ),
@@ -54,6 +58,7 @@ class TimeLineChart extends StatelessWidget {
       // minutes interval
       for (var i = 0, j = 0, count = 5; i < 12; i++) {
         temp = '$count';
+        // count = 5 , 10, 15 like this 5 minute interval
         data.insert(j, liveData(temp, Random().nextInt(20) + 5));
         j++;
         count += 5;

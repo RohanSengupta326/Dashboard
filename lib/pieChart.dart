@@ -63,6 +63,7 @@ class _PieChartState extends State<PieChart> {
             labelPosition: charts.ArcLabelPosition.inside,
             outsideLabelStyleSpec: charts.TextStyleSpec(
                 fontSize: 25,
+                fontFamily: 'Lato',
                 color: charts.ColorUtil.fromDartColor(Colors.amber)))
       ]),
     );

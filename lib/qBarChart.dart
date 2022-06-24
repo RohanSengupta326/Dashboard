@@ -18,7 +18,7 @@ class QbarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return charts.BarChart(
       behaviors: [
-        charts.ChartTitle('No. of Calls',
+        charts.ChartTitle('Cummulative No. of Calls',
             titleStyleSpec: charts.TextStyleSpec(
                 color: charts.MaterialPalette.green.shadeDefault),
             behaviorPosition: charts.BehaviorPosition.start),
@@ -66,7 +66,12 @@ class QbarChart extends StatelessWidget {
       ];
       // date interval
     } else if (checkMinHr == 2) {
-      data = [];
+      data = [
+        liveData('Support', Random().nextInt(200) + 60),
+        liveData('Sales', Random().nextInt(150) + 60),
+        liveData('Accounting', Random().nextInt(100) + 50),
+        liveData('Hr', Random().nextInt(70) + 40),
+      ];
     }
 
     return [

@@ -91,17 +91,20 @@ class _HomePageState extends State<HomePage> {
   var _timeRange = TimeRange(
     startTime: TimeOfDay(hour: 0, minute: 0),
     endTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+    // endtime : current hour minus the minutes , cause we r showing data in minimum of 1 hour interval, so like
+    // if its 11:35 show last time on timeRangePicker 11
   ).obs;
 
   @override
   void initState() {
-    // TODO: implement initState
+    // for 15 second refresh graph
     var refresh = Duration(seconds: 15);
     Timer.periodic(refresh, (Timer t) => onRefresh());
     super.initState();
   }
 
   Widget gotDateRange(BuildContext context) {
+    // body after getting the dateRange selected by user
     return Container(
       margin: EdgeInsets.only(top: 10),
       child: Column(
@@ -139,11 +142,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getDateRange(BuildContext context) async {
+    // calling dateRangePicker
     final newDateRange = showDateRangePicker(
       context: context,
       firstDate: DateTime(DateTime.now().year - 1),
       lastDate: DateTime.now(),
+      // dates selectable by user is from past 1 year to today
       initialDateRange: _dateTimeRange.value,
+      // default selected date range = today to today
     ).then((value) {
       if (value == null) return;
 
@@ -152,17 +158,24 @@ class _HomePageState extends State<HomePage> {
       //                   .format(_dateTimeRange.value.start));
       // log(_dateTimeRange.value.duration.inDays.toString());
       if (_dateTimeRange.value.start == _dateTimeRange.value.end) {
+        // if same date start and end means time range selection needed for that particular date
         // log('equal');
         getTimeRange(context);
+        // calling time range picker
       }
       check = 2;
+      // check 2 means date range is selected, no time range needed, so send this data to show graphs accordingly
       x.value = 50;
+      // updates Obx to rebuild graph with new data after dateTime selected
     });
   }
 
   Widget gotTimeRange(BuildContext context) {
+    // body after timeRange selected
     if (def == -1) {
       busyAgents();
+      // calling this function here to show agents in graph who are busy when default Time range is selected, def changes when user selects
+      // different time range
     }
     return Container(
       margin: const EdgeInsets.only(top: 10),
@@ -202,65 +215,111 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getTimeRange(BuildContext context) async {
-    final newTimeRange = await showTimeRangePicker(
-      builder: (context, child) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Container(
-                height: 450,
-                width: 700,
-                child: child,
-              ),
-            ),
-          ],
-        );
-      },
-      context: context,
-      start: TimeOfDay(hour: 0, minute: 0),
-      end: TimeOfDay.now(),
-      maxDuration: Duration(days: 1),
-      disabledTime: TimeRange(
-          startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
-          endTime: TimeOfDay(hour: 0, minute: 0)),
-      interval: Duration(hours: 1),
-      use24HourFormat: true,
-      minDuration: Duration(hours: 1),
-      strokeWidth: 5,
-      handlerRadius: 10,
-      labelStyle: TextStyle(fontSize: 25),
-      autoAdjustLabels: true,
-      labels: ["24 h", "3 h", "6 h", "9 h", "12 h", "15 h", "18 h", "21 h"]
-          .asMap()
-          .entries
-          .map((e) {
-        return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
-      }).toList(),
-      clockRotation: 180,
-    );
+    final newTimeRange = GetPlatform.isDesktop
+        ? await showTimeRangePicker(
+            builder: (context, child) {
+              // builder function to customize timeRangePicker widget size on screen ,
+              return Column(
+                // without this coloum size wouldnt change
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                    child: Container(
+                      height: 450,
+                      width: 700,
+                      child: child,
+                    ),
+                  ),
+                ],
+              );
+            },
+            context: context,
+            start: TimeOfDay(hour: 0, minute: 0),
+            // from 12 am
+            end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+            // current hour minus minutes, 11:35 -> 11
+            maxDuration: Duration(days: 1),
+            disabledTime: TimeRange(
+                // anytime in the future= after current time , time cant be selected, only from 12 am to current time of day
+                startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+                endTime: TimeOfDay(hour: 0, minute: 0)),
+            interval: Duration(hours: 1),
+            use24HourFormat: true,
+            minDuration: Duration(hours: 1),
+            strokeWidth: 5,
+            handlerRadius: 5,
+            labelStyle: TextStyle(fontSize: 25),
+            autoAdjustLabels: true,
+            labels: [
+              "00 h",
+              "3 h",
+              "6 h",
+              "9 h",
+              "12 h",
+              "15 h",
+              "18 h",
+              "21 h"
+            ].asMap().entries.map((e) {
+              return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
+            }).toList(),
+            clockRotation: 180,
+          )
+        : await showTimeRangePicker(
+            context: context,
+            start: TimeOfDay(hour: 0, minute: 0),
+            end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+            maxDuration: Duration(days: 1),
+            disabledTime: TimeRange(
+                startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+                endTime: TimeOfDay(hour: 0, minute: 0)),
+            interval: Duration(hours: 1),
+            use24HourFormat: true,
+            minDuration: Duration(hours: 1),
+            strokeWidth: 5,
+            handlerRadius: 5,
+            labelStyle: TextStyle(fontSize: 10),
+            autoAdjustLabels: true,
+            labels: [
+              "00 h",
+              "3 h",
+              "6 h",
+              "9 h",
+              "12 h",
+              "15 h",
+              "18 h",
+              "21 h"
+            ].asMap().entries.map((e) {
+              return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
+            }).toList(),
+            clockRotation: 180,
+          );
+    ;
 
     if (newTimeRange == null) {
       return;
     }
     _timeRange.value = newTimeRange;
     busyAgents();
+    // time range set now change data according to DateTime Range by calling this function
   }
 
   Future<void> onRefresh() async {
     y.value = Random().nextInt(100) + 1;
+    // just chaning random obs value so that graph rebuilds
   }
 
   void busyAgents() {
     var start = _timeRange.value.startTime;
     var end = _timeRange.value.endTime;
     var startInt = double.parse(start.toString().substring(10, 12));
+    // start = TimeOfDay(18:00) like this so cutting the string to 18 only then converting to double
     endInt = double.parse(end.toString().substring(10, 12));
 
     // log(start.toString().substring(10, 12));
     // log(end.toString().substring(10, 12));
     var diff = endInt - startInt;
+    //if diff == 1 then single day is selected no date range
     // if(diff == 1.0){
     //   print('true');
     // }
@@ -276,6 +335,7 @@ class _HomePageState extends State<HomePage> {
 
     if (diff == 1.0) {
       check = 0;
+      // check = 0 means single date is selected
       xAxis = startInt;
       // startInt + 5, until it reaches endInt as xAxis of graph
       x.value = 5;
@@ -313,6 +373,7 @@ class _HomePageState extends State<HomePage> {
             ),
             onPressed: () {
               def = 0;
+              // user pressed button so remove default date by changing def = 0
               getDateRange(context);
             },
           ),
@@ -326,13 +387,14 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Obx(() {
-                print(_dateTimeRange.value.start);
+                // print(_dateTimeRange.value.start);
                 return Column(children: [
                   gotDateRange(context),
                   const SizedBox(
                     height: 10,
                   ),
                   def == -1
+                  // show default or not
                       ? gotTimeRange(context)
                       : _dateTimeRange.value.start == _dateTimeRange.value.end
                           ? gotTimeRange(context)
@@ -418,45 +480,50 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ])))),
                     Container(
-                        height: 600,
-                        width: 700,
-                        padding: EdgeInsets.all(20),
-                        child: Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(children: <Widget>[
-                                  const Text(
-                                    'Queues',
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Expanded(
-                                    child: Obx(() {
-                                      return QbarChart(
-                                          x.value,
-                                          _timeRange.value.startTime
-                                              .format(context),
-                                          _timeRange.value.endTime
-                                              .format(context),
-                                          xAxis,
-                                          endInt,
-                                          check,
-                                          _dateTimeRange.value);
-                                    }),
-                                  ),
-                                ])))),
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              const Text(
+                                'Queues',
+                                style: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return QbarChart(
+                                      x.value,
+                                      _timeRange.value.startTime
+                                          .format(context),
+                                      _timeRange.value.endTime.format(context),
+                                      xAxis,
+                                      endInt,
+                                      check,
+                                      _dateTimeRange.value);
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
               // IndianMap()
               Container(
                 height: 600,
+                width: phoneWidth,
                 padding: const EdgeInsets.all(20),
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: MyWidget(),
+                    child: Center(child: Text('map here')),
                   ),
                 ),
               )
