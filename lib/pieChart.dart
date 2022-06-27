@@ -55,7 +55,8 @@ class _PieChartState extends State<PieChart> {
           desiredMaxRows: 3,
           cellPadding: EdgeInsets.only(right: 4.0, bottom: 4.0),
           entryTextStyle: charts.TextStyleSpec(
-              color: charts.MaterialPalette.green.shadeDefault, fontSize: 20),
+            fontFamily: 'Lato',
+              color: charts.MaterialPalette.black.lighter, fontSize: 20),
         )
       ],
       defaultRenderer: charts.ArcRendererConfig(arcRendererDecorators: [

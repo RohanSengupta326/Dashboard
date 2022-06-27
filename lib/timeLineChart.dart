@@ -14,39 +14,69 @@ class TimeLineChart extends StatelessWidget {
   TimeLineChart(this.x, this.start, this.end, this.xAxis, this.endInt,
       this.checkMinHr, this.dateTimeRange);
 
+  String getMinuteString(double decimalValue) {
+    return '${(decimalValue * 101).toInt()}'.padLeft(2, '0');
+  }
+
+  String getHourString(int flooredValue) {
+    return '${flooredValue % 24}'.padLeft(2, '0');
+  }
+
   @override
   Widget build(BuildContext context) {
+    var showFromDate = dateTimeRange.start.toString();
     return charts.BarChart(
       behaviors: [
-        charts.ChartTitle('No. of Busy Agents',
-            titleStyleSpec: charts.TextStyleSpec(
-                color: charts.MaterialPalette.green.shadeDefault),
-            behaviorPosition: charts.BehaviorPosition.start),
-            // charts.BehaviorPosition.start is label at y axis
+        charts.SlidingViewport(),
+        // A pan and zoom behavior helps demonstrate the sliding viewport
+        // behavior by allowing the data visible in the viewport to be adjusted
+        // dynamically.
+        charts.PanAndZoomBehavior(),
+
         charts.ChartTitle(
-            checkMinHr == 0
-                ? 'Intervals of 5 Minutes'
-                : checkMinHr == 1
-                    ? 'Intervals of 1 Hour'
-                    : 'Intervals of 1 Day',
-            titleStyleSpec: charts.TextStyleSpec(
-                color: charts.MaterialPalette.green.shadeDefault),
-            behaviorPosition: charts.BehaviorPosition.bottom),
-            // charts.BehaviorPosition.bottom is label at x axis
+          'No. of Busy Agents',
+          titleStyleSpec:
+              charts.TextStyleSpec(color: charts.MaterialPalette.black.lighter),
+          behaviorPosition: charts.BehaviorPosition.start,
+        ),
+        // charts.BehaviorPosition.start is label at y axis
+        charts.ChartTitle(
+          checkMinHr == 0
+              ? 'Intervals of 5 Minutes'
+              : checkMinHr == 1
+                  ? 'Intervals of 1 Hour'
+                  : 'Intervals of 1 Day',
+          titleStyleSpec: charts.TextStyleSpec(
+            color: charts.MaterialPalette.black.lighter,
+            fontFamily: 'Lato',
+          ),
+          behaviorPosition: charts.BehaviorPosition.bottom,
+        ),
+        // charts.BehaviorPosition.bottom is label at x axis
       ],
       _createSampleData(),
       animate: true,
-      animationDuration: const Duration(seconds: 3),
+      animationDuration: const Duration(seconds: 1),
       defaultRenderer: charts.BarRendererConfig(
         maxBarWidthPx: 5,
         // bar width
       ),
       primaryMeasureAxis: const charts.NumericAxisSpec(
+        showAxisLine: true,
         viewport: charts.NumericExtents(0, 270),
         // y axis from  0 to 270 fixed
         tickProviderSpec:
             charts.BasicNumericTickProviderSpec(desiredTickCount: 20),
       ),
+      domainAxis: charts.OrdinalAxisSpec(
+          viewport: charts.OrdinalViewport(
+              // for showing the part of the graph, and then click right to go right and left to go left
+              checkMinHr == 1
+                  ? '00:00'
+                  : checkMinHr == 0
+                      ? '5'
+                      : showFromDate,
+              10 /* = how many bars you wanna show on one screen */)),
     );
   }
 
@@ -67,8 +97,16 @@ class TimeLineChart extends StatelessWidget {
       // hour interval
       // print(endInt);
       // print(DateTime.now().toString().substring(11, 13));
+
       for (var i = xAxis, j = 0; i <= endInt; i++) {
-        data.insert(j, liveData('${i.toString()}', Random().nextInt(40) + 10));
+        int flooredValue = i.floor();
+        double decimalValue = i - flooredValue;
+        String hourValue = getHourString(flooredValue);
+        String minuteString = getMinuteString(decimalValue);
+
+        // print('this : $hourValue:$minuteString');
+        data.insert(
+            j, liveData('$hourValue:$minuteString', Random().nextInt(40) + 10));
         j++;
       }
     } else if (checkMinHr == 2) {

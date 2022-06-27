@@ -14,8 +14,14 @@ class SimpleBarChart extends StatelessWidget {
       behaviors: [
         charts.ChartTitle('Active Agents',
             titleStyleSpec: charts.TextStyleSpec(
-                color: charts.MaterialPalette.green.shadeDefault),
-            behaviorPosition: charts.BehaviorPosition.start)
+                fontFamily: 'Lato',
+                color: charts.MaterialPalette.black.lighter),
+            behaviorPosition: charts.BehaviorPosition.start),
+        charts.ChartTitle('DateTime(day)',
+            titleStyleSpec: charts.TextStyleSpec(
+                fontFamily: 'Lato',
+                color: charts.MaterialPalette.black.lighter),
+            behaviorPosition: charts.BehaviorPosition.bottom),
       ],
       _createSampleData(),
       animate: true,
@@ -24,6 +30,7 @@ class SimpleBarChart extends StatelessWidget {
         maxBarWidthPx: 40,
       ),
       primaryMeasureAxis: const charts.NumericAxisSpec(
+        showAxisLine: true,
         viewport: charts.NumericExtents(0, 200),
         tickProviderSpec:
             charts.BasicNumericTickProviderSpec(desiredTickCount: 20),
@@ -33,8 +40,7 @@ class SimpleBarChart extends StatelessWidget {
 
   List<charts.Series<liveData, String>> _createSampleData() {
     final data = [
-      liveData(DateFormat('EEE d MMM').format(DateTime.now()).toString(),
-          x),
+      liveData(DateFormat('EEE d MMM').format(DateTime.now()).toString(), x),
     ];
 
     return [

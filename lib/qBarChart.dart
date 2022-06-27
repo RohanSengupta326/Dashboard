@@ -20,11 +20,13 @@ class QbarChart extends StatelessWidget {
       behaviors: [
         charts.ChartTitle('Cummulative No. of Calls',
             titleStyleSpec: charts.TextStyleSpec(
-                color: charts.MaterialPalette.green.shadeDefault),
+                fontFamily: 'Lato',
+                color: charts.MaterialPalette.black.lighter),
             behaviorPosition: charts.BehaviorPosition.start),
         charts.ChartTitle('Queues',
             titleStyleSpec: charts.TextStyleSpec(
-                color: charts.MaterialPalette.green.shadeDefault),
+                fontFamily: 'Lato',
+                color: charts.MaterialPalette.black.lighter),
             behaviorPosition: charts.BehaviorPosition.bottom),
       ],
       _createSampleData(),
@@ -33,8 +35,8 @@ class QbarChart extends StatelessWidget {
       defaultRenderer: charts.BarRendererConfig(
         maxBarWidthPx: 40,
       ),
-
       primaryMeasureAxis: const charts.NumericAxisSpec(
+        showAxisLine: true,
         viewport: charts.NumericExtents(0, 270),
         tickProviderSpec:
             charts.BasicNumericTickProviderSpec(desiredTickCount: 20),

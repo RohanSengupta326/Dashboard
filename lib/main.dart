@@ -26,8 +26,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.lightGreen,
-        ),
+            backgroundColor: Colors.lightGreen,
+            titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Lato',
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.bold,
+                fontSize: 30)),
         primaryColor: Colors.lightGreen,
         primarySwatch: Colors.amber,
         fontFamily: 'Lato',
@@ -44,9 +49,22 @@ class MyApp extends StatelessWidget {
             background: Colors.black,
             onBackground: Colors.white),
         textTheme: const TextTheme(
-          labelMedium: TextStyle(fontSize: 20.0, fontWeight: FontWeight.normal),
-          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          labelMedium: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Lato',
+            fontStyle: FontStyle.normal,
+          ),
+          headline1: TextStyle(
+            fontSize: 72.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Lato',
+          ),
+          headline6: TextStyle(
+            fontSize: 25.0,
+            fontStyle: FontStyle.normal,
+            fontFamily: 'Lato',
+          ),
           bodyText2: TextStyle(fontSize: 14.0),
         ),
       ).copyWith(),
@@ -115,23 +133,39 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                  color: Theme.of(context).colorScheme.secondary,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      border: Border.all(
+                          width: 1, color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(25)),
                   height: 50,
-                  width: 100,
+                  width: 130,
                   padding: EdgeInsets.all(10),
                   child: FittedBox(
-                      child: Text(DateFormat('dd/MMM/yyyy')
-                          .format(_dateTimeRange.value.start)))),
+                      child: Text(
+                    DateFormat('dd/MMM/yyyy')
+                        .format(_dateTimeRange.value.start),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ))),
               const Text('    -->    '),
               Container(
-                color: Theme.of(context).colorScheme.secondary,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    border: Border.all(
+                        width: 1, color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(25)),
+                // color: Theme.of(context).colorScheme.secondary,
                 height: 50,
-                width: 100,
+                width: 130,
                 padding: const EdgeInsets.all(10),
                 child: FittedBox(
-                    child: Text(DateFormat('dd/MMM/yyyy')
-                        .format(_dateTimeRange.value.end))),
-              )
+                    child: Text(
+                  DateFormat('dd/MMM/yyyy').format(_dateTimeRange.value.end),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                )),
+              ),
             ],
           ),
         ],
@@ -187,23 +221,38 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                  color: Theme.of(context).colorScheme.secondary,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      border: Border.all(
+                          width: 1, color: Theme.of(context).primaryColor),
+                      borderRadius: BorderRadius.circular(25)),
+                  // color: Theme.of(context).colorScheme.secondary,
                   height: 50,
-                  width: 100,
+                  width: 130,
                   padding: EdgeInsets.all(10),
                   child: FittedBox(
-                      child: Text(_timeRange.value.startTime
-                          .toString()
-                          .substring(10, 15)))),
+                      child: Text(
+                    _timeRange.value.startTime.toString().substring(10, 15),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ))),
               Text('    -->    '),
               Container(
-                color: Theme.of(context).colorScheme.secondary,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    border: Border.all(
+                        width: 1, color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(25)),
+                // color: Theme.of(context).colorScheme.secondary,
                 height: 50,
-                width: 100,
+                width: 130,
                 padding: EdgeInsets.all(10),
                 child: FittedBox(
                     child: Text(
-                        _timeRange.value.endTime.toString().substring(10, 15))),
+                  _timeRange.value.endTime.toString().substring(10, 15),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                )),
               )
             ],
           ),
@@ -242,13 +291,14 @@ class _HomePageState extends State<HomePage> {
                 // anytime in the future= after current time , time cant be selected, only from 12 am to current time of day
                 startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
                 endTime: TimeOfDay(hour: 0, minute: 0)),
-            interval: Duration(hours: 1),
+            interval: Duration(minutes: 1),
             use24HourFormat: true,
             minDuration: Duration(hours: 1),
             strokeWidth: 5,
             handlerRadius: 5,
             labelStyle: TextStyle(fontSize: 25),
             autoAdjustLabels: true,
+            rotateLabels: false,
             labels: [
               "00 h",
               "3 h",
@@ -267,17 +317,19 @@ class _HomePageState extends State<HomePage> {
             context: context,
             start: TimeOfDay(hour: 0, minute: 0),
             end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
-            maxDuration: Duration(days: 1),
+            // maxDuration: Duration(days: 1),
             disabledTime: TimeRange(
                 startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
                 endTime: TimeOfDay(hour: 0, minute: 0)),
             interval: Duration(hours: 1),
+            rotateLabels: false,
             use24HourFormat: true,
             minDuration: Duration(hours: 1),
             strokeWidth: 5,
             handlerRadius: 5,
             labelStyle: TextStyle(fontSize: 10),
-            autoAdjustLabels: true,
+            // autoAdjustLabels: true,
+            labelOffset: 30,
             labels: [
               "00 h",
               "3 h",
@@ -292,7 +344,6 @@ class _HomePageState extends State<HomePage> {
             }).toList(),
             clockRotation: 180,
           );
-    ;
 
     if (newTimeRange == null) {
       return;
@@ -310,9 +361,14 @@ class _HomePageState extends State<HomePage> {
   void busyAgents() {
     var start = _timeRange.value.startTime;
     var end = _timeRange.value.endTime;
-    var startInt = double.parse(start.toString().substring(10, 12));
+    // print(double.parse(
+    //     '${start.toString().substring(10, 12)}.${start.toString().substring(13, 15)}'));
+
+    var startInt = double.parse(
+        '${start.toString().substring(10, 12)}.${start.toString().substring(13, 15)}');
     // start = TimeOfDay(18:00) like this so cutting the string to 18 only then converting to double
-    endInt = double.parse(end.toString().substring(10, 12));
+    endInt = double.parse(
+        '${end.toString().substring(10, 12)}.${end.toString().substring(13, 15)}');
 
     // log(start.toString().substring(10, 12));
     // log(end.toString().substring(10, 12));
@@ -364,16 +420,24 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Dashboard'),
         actions: [
-          TextButton(
-            child: Text(
-              'Select DateTime',
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          Container(
+            margin: EdgeInsets.only(right: 20),
+            child: TextButton.icon(
+              icon: Icon(
+                Icons.calendar_month,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              label: Text(
+                'DateTime',
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              onPressed: () {
+                def = 0;
+                // user pressed button so remove default date by changing def = 0
+                getDateRange(context);
+              },
             ),
-            onPressed: () {
-              def = 0;
-              // user pressed button so remove default date by changing def = 0
-              getDateRange(context);
-            },
           ),
         ],
       ),
@@ -408,20 +472,19 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Container(
                         height: 600,
-                        width: phoneWidth,
+                        width: phoneWidth! + 10,
                         padding: EdgeInsets.all(20),
                         child: Card(
                             child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(children: <Widget>[
-                                  const Text(
+                                  Text(
                                     'PieChart',
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                   const SizedBox(
-                                    height: 10.0,
+                                    height: 25.0,
                                   ),
                                   Expanded(child: PieChart(_graphColors)),
                                 ])))),
@@ -434,11 +497,10 @@ class _HomePageState extends State<HomePage> {
                             child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(children: <Widget>[
-                                  const Text(
-                                    '15 sec Interval',
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold),
+                                  Text(
+                                    '15 seconds Interval',
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                   const SizedBox(
                                     height: 10.0,
@@ -456,24 +518,24 @@ class _HomePageState extends State<HomePage> {
                             child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(children: <Widget>[
-                                  const Text(
+                                  Text(
                                     'Agents Timeline',
-                                    style: TextStyle(
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                   Expanded(
                                     child: Obx(() {
                                       return TimeLineChart(
-                                          x.value,
-                                          _timeRange.value.startTime
-                                              .format(context),
-                                          _timeRange.value.endTime
-                                              .format(context),
-                                          xAxis,
-                                          endInt,
-                                          check,
-                                          _dateTimeRange.value);
+                                        x.value,
+                                        _timeRange.value.startTime
+                                            .format(context),
+                                        _timeRange.value.endTime
+                                            .format(context),
+                                        xAxis,
+                                        endInt,
+                                        check,
+                                        _dateTimeRange.value,
+                                      );
                                     }),
                                   ),
                                 ])))),
@@ -486,11 +548,9 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: <Widget>[
-                              const Text(
+                              Text(
                                 'Queues',
-                                style: TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                               Expanded(
                                 child: Obx(() {
