@@ -262,6 +262,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getTimeRange(BuildContext context) async {
+    // print(_dateTimeRange.value.start.toString().substring(0, 10));
+    // print(DateTime.now().toString().substring(0, 10));
+    var temp = false, timerange;
+
+    if ((_dateTimeRange.value.start.toString().substring(0, 10) ==
+            _dateTimeRange.value.end.toString().substring(0, 10)) &&
+        (_dateTimeRange.value.start.toString().substring(0, 10) ==
+            DateTime.now().toString().substring(0, 10))) {
+      timerange = TimeRange(
+          // anytime in the future= after current time , time cant be selected, only from 12 am to current time of day
+          startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+          endTime: TimeOfDay(hour: 0, minute: 0));
+      // temp = true;
+      // print(temp);
+    } else if ((_dateTimeRange.value.start.toString().substring(0, 10) ==
+            _dateTimeRange.value.end.toString().substring(0, 10)) &&
+        (_dateTimeRange.value.start.toString().substring(0, 10) !=
+            DateTime.now().toString().substring(0, 10))) {
+      timerange = null;
+    }
+    // print(temp);
     final newTimeRange = GetPlatform.isDesktop
         ? await showTimeRangePicker(
             builder: (context, child) {
@@ -287,16 +308,13 @@ class _HomePageState extends State<HomePage> {
             end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
             // current hour minus minutes, 11:35 -> 11
             maxDuration: Duration(days: 1),
-            disabledTime: TimeRange(
-                // anytime in the future= after current time , time cant be selected, only from 12 am to current time of day
-                startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
-                endTime: TimeOfDay(hour: 0, minute: 0)),
+            disabledTime: timerange,
             interval: Duration(minutes: 1),
             use24HourFormat: true,
             minDuration: Duration(hours: 1),
             strokeWidth: 5,
             handlerRadius: 5,
-            labelStyle: TextStyle(fontSize: 25),
+            labelStyle: TextStyle(fontSize: 17),
             autoAdjustLabels: true,
             rotateLabels: false,
             labels: [
@@ -318,18 +336,22 @@ class _HomePageState extends State<HomePage> {
             start: TimeOfDay(hour: 0, minute: 0),
             end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
             // maxDuration: Duration(days: 1),
-            disabledTime: TimeRange(
-                startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
-                endTime: TimeOfDay(hour: 0, minute: 0)),
-            interval: Duration(hours: 1),
-            rotateLabels: false,
+            disabledTime: timerange,
+            interval: Duration(minutes: 1),
+            rotateLabels: true,
             use24HourFormat: true,
             minDuration: Duration(hours: 1),
             strokeWidth: 5,
             handlerRadius: 5,
-            labelStyle: TextStyle(fontSize: 10),
+            labelStyle: TextStyle(
+                fontSize: 15, color: Theme.of(context).colorScheme.onSecondary),
             // autoAdjustLabels: true,
-            labelOffset: 30,
+            // labelOffset: 30,
+            autoAdjustLabels: true,
+            ticks: 8,
+            ticksColor: Colors.black,
+            ticksLength: 10,
+            ticksWidth: 3,
             labels: [
               "00 h",
               "3 h",
@@ -361,6 +383,7 @@ class _HomePageState extends State<HomePage> {
   void busyAgents() {
     var start = _timeRange.value.startTime;
     var end = _timeRange.value.endTime;
+
     // print(double.parse(
     //     '${start.toString().substring(10, 12)}.${start.toString().substring(13, 15)}'));
 
@@ -373,7 +396,7 @@ class _HomePageState extends State<HomePage> {
     // log(start.toString().substring(10, 12));
     // log(end.toString().substring(10, 12));
     var diff = endInt - startInt;
-    //if diff == 1 then single day is selected no date range
+    //if diff == 1 then 1 hour range is selected no date range
     // if(diff == 1.0){
     //   print('true');
     // }

@@ -55,7 +55,7 @@ class TimeLineChart extends StatelessWidget {
         // charts.BehaviorPosition.bottom is label at x axis
       ],
       _createSampleData(),
-      animate: true,
+      animate: false,
       animationDuration: const Duration(seconds: 1),
       defaultRenderer: charts.BarRendererConfig(
         maxBarWidthPx: 5,
