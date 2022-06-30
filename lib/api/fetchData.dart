@@ -3,9 +3,11 @@ import 'package:time_range_picker/time_range_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'api.dart';
 
-class PostRequestInUtcMillisecond {
+class PostRquest {
   Map<String, dynamic>? data;
+  var urL = Api().urL;
 
   Future<void> fetchData(DateTimeRange date, TimeRange time) async {
     String startDateTimeUtc = DateTime(date.start.day).toUtc().toString();
@@ -16,7 +18,7 @@ class PostRequestInUtcMillisecond {
     String endDateTimeMilliseconds =
         DateTime(date.end.day).millisecond.toString();
 
-    String urL = 'API_HERE';
+    
     var url = Uri.parse(
       urL,
     );

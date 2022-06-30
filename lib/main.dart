@@ -12,6 +12,7 @@ import 'dart:developer';
 import 'dart:ui';
 import 'dart:async';
 import './customScroll.dart';
+import 'lineChart.dart';
 
 void main() {
   runApp(MyApp());
@@ -596,18 +597,45 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              // IndianMap()
-              // Container(
-              //   height: 1000,
-              //   width: phoneWidth,
-              //   padding: const EdgeInsets.all(20),
-              //   child: Card(
-              //     child: Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: Text,
-              //     ),
-              //   ),
-              // )
+              SizedBox(height: 30),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Agents Timeline',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return LineChart(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    int.parse(xAxis.toString()),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
