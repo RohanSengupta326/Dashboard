@@ -13,6 +13,11 @@ import 'dart:ui';
 import 'dart:async';
 import './customScroll.dart';
 import 'lineChart.dart';
+import 'stackedBarChart.dart';
+import 'stackedFillColor.dart';
+import 'stackedArea.dart';
+import 'stackedAreaCustomColor.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -621,7 +626,170 @@ class _HomePageState extends State<HomePage> {
                                     x.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    int.parse(xAxis.toString()),
+                                    xAxis.toInt(),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'StackedBar Chart',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return StackedBar(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis,
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Stacked Fill Colors',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return StackedFillColor(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis,
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Time Series Simple',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              // Expanded(
+                              //   child: Obx(() {
+                              //     return StackedFillColor(
+                              //       x.value,
+                              //       _timeRange.value.startTime.format(context),
+                              //       _timeRange.value.endTime.format(context),
+                              //       xAxis,
+                              //       endInt,
+                              //       check,
+                              //       _dateTimeRange.value,
+                              //     );
+                              //   }),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Stacked Area',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return StackedArea(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis.toInt(),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Stacked Area Custom Color',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return StackedAreaCustomColor(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis.toInt(),
                                     endInt,
                                     check,
                                     _dateTimeRange.value,
@@ -635,7 +803,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),

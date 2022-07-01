@@ -28,7 +28,7 @@ class LineChart extends StatelessWidget {
           })
         : null;
 
-    return charts.LineChart(
+    return charts.TimeSeriesChart(
         behaviors: [
           // charts.SlidingViewport(),
           // // A pan and zoom behavior helps demonstrate the sliding viewport
@@ -78,7 +78,7 @@ class LineChart extends StatelessWidget {
             : null);
   }
 
-  List<charts.Series<liveData, int>> _createSampleData() {
+  List<charts.Series<liveData, DateTime>> _createSampleData() {
     initializeDateFormatting();
     int datehere;
 
@@ -100,7 +100,7 @@ class LineChart extends StatelessWidget {
 
       for (var i = xAxis, j = 0; i <= endInt; i++) {
         // print('this : $hourValue:$minuteString');
-        data.insert(j, liveData(i, Random().nextInt(40) + 10));
+        data.insert(j, liveData(DateTime(2022, ), Random().nextInt(40) + 10));
         j++;
       }
     } else if (checkMinHr == 2) {
@@ -132,7 +132,7 @@ class LineChart extends StatelessWidget {
     // print(
     //     'converted to datetime : ${DateTime.fromMillisecondsSinceEpoch(datehere)}');
     return [
-      charts.Series<liveData, int>(
+      charts.Series<liveData, DateTime>(
         id: 'data',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         domainFn: (liveData value, _) => value.day,
@@ -144,7 +144,7 @@ class LineChart extends StatelessWidget {
 }
 
 class liveData {
-  final int day;
+  final DateTime day;
   final int value;
 
   liveData(this.day, this.value);

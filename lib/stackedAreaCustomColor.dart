@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:math';
 import 'package:intl/date_symbol_data_local.dart';
 
-class LineChart extends StatelessWidget {
+class StackedAreaCustomColor extends StatelessWidget {
   var x;
   var start;
   var end;
@@ -12,7 +12,7 @@ class LineChart extends StatelessWidget {
   final endInt;
   final checkMinHr;
   DateTimeRange dateTimeRange;
-  LineChart(this.x, this.start, this.end, this.xAxis, this.endInt,
+  StackedAreaCustomColor(this.x, this.start, this.end, this.xAxis, this.endInt,
       this.checkMinHr, this.dateTimeRange);
   int dayCount = 0;
   var dateCount = -1;
@@ -29,6 +29,8 @@ class LineChart extends StatelessWidget {
         : null;
 
     return charts.LineChart(
+        defaultRenderer:
+            charts.LineRendererConfig(includeArea: true, stacked: true),
         behaviors: [
           // charts.SlidingViewport(),
           // // A pan and zoom behavior helps demonstrate the sliding viewport
@@ -84,12 +86,16 @@ class LineChart extends StatelessWidget {
 
     // String temp = start.toString() + ' --> ' + end.toString();
     List<liveData> data = [];
+    List<liveData> data2 = [];
+    List<liveData> data3 = [];
     var temp = '';
     if (checkMinHr == 0) {
       // minutes interval
       for (var i = 0, j = 0, count = 5; i < 12; i++) {
         // count = 5 , 10, 15 like this 5 minute interval
         data.insert(j, liveData(count, Random().nextInt(20) + 5));
+        data2.insert(j, liveData(count, Random().nextInt(20) + 5));
+        data3.insert(j, liveData(count, Random().nextInt(20) + 5));
         j++;
         count += 5;
       }
@@ -101,6 +107,8 @@ class LineChart extends StatelessWidget {
       for (var i = xAxis, j = 0; i <= endInt; i++) {
         // print('this : $hourValue:$minuteString');
         data.insert(j, liveData(i, Random().nextInt(40) + 10));
+        data2.insert(j, liveData(i, Random().nextInt(40) + 10));
+        data3.insert(j, liveData(i, Random().nextInt(40) + 10));
         j++;
       }
     } else if (checkMinHr == 2) {
@@ -121,6 +129,20 @@ class LineChart extends StatelessWidget {
                       .format(dateTimeRange.start.add(Duration(days: i))) */
                 i,
                 Random().nextInt(100) + 50));
+        data2.insert(
+            j,
+            liveData(
+                /* DateFormat('MMMd')
+                      .format(dateTimeRange.start.add(Duration(days: i))) */
+                i,
+                Random().nextInt(100) + 50));
+        data3.insert(
+            j,
+            liveData(
+                /* DateFormat('MMMd')
+                      .format(dateTimeRange.start.add(Duration(days: i))) */
+                i,
+                Random().nextInt(100) + 50));
         j++;
       }
       // print(dateTimeRange.start.millisecondsSinceEpoch);
@@ -134,10 +156,27 @@ class LineChart extends StatelessWidget {
     return [
       charts.Series<liveData, int>(
         id: 'data',
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault.darker,
+        areaColorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault.lighter,
         domainFn: (liveData value, _) => value.day,
         measureFn: (liveData value, _) => value.value,
         data: data,
+      ),
+      charts.Series<liveData, int>(
+        id: 'data',
+        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.darker,
+        areaColorFn: (_, __) => charts.MaterialPalette.green.shadeDefault.lighter,
+        domainFn: (liveData value, _) => value.day,
+        measureFn: (liveData value, _) => value.value,
+        data: data2,
+      ),
+      charts.Series<liveData, int>(
+        id: 'data',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault.darker,
+        areaColorFn: (_, __) => charts.MaterialPalette.red.shadeDefault.lighter,
+        domainFn: (liveData value, _) => value.day,
+        measureFn: (liveData value, _) => value.value,
+        data: data3,
       )
     ];
   }
