@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       m = -1,
       n = -1,
       def = -1;
-  double? phoneWidth = GetPlatform.isDesktop ? 700 : Get.width;
+  double? phoneWidth = GetPlatform.isAndroid ? Get.width : 700;
 
   var _dateTimeRange =
       DateTimeRange(start: DateTime.now(), end: DateTime.now()).obs;
@@ -292,8 +292,43 @@ class _HomePageState extends State<HomePage> {
       timerange = null;
     }
     // print(temp);
-    final newTimeRange = GetPlatform.isDesktop
+    final newTimeRange = GetPlatform.isAndroid
         ? await showTimeRangePicker(
+            context: context,
+            start: TimeOfDay(hour: 0, minute: 0),
+            end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
+            // maxDuration: Duration(days: 1),
+            disabledTime: timerange,
+            interval: Duration(minutes: 1),
+            rotateLabels: true,
+            use24HourFormat: true,
+            minDuration: Duration(hours: 1),
+            strokeWidth: 5,
+            handlerRadius: 5,
+            labelStyle: TextStyle(
+                fontSize: 15, color: Theme.of(context).colorScheme.onSecondary),
+            // autoAdjustLabels: true,
+            // labelOffset: 30,
+            autoAdjustLabels: true,
+            ticks: 8,
+            ticksColor: Colors.black,
+            ticksLength: 10,
+            ticksWidth: 3,
+            labels: [
+              "00 h",
+              "3 h",
+              "6 h",
+              "9 h",
+              "12 h",
+              "15 h",
+              "18 h",
+              "21 h"
+            ].asMap().entries.map((e) {
+              return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
+            }).toList(),
+            clockRotation: 180,
+          )
+        : await showTimeRangePicker(
             builder: (context, child) {
               // builder function to customize timeRangePicker widget size on screen ,
               return Column(
@@ -326,41 +361,6 @@ class _HomePageState extends State<HomePage> {
             labelStyle: TextStyle(fontSize: 17),
             autoAdjustLabels: true,
             rotateLabels: false,
-            labels: [
-              "00 h",
-              "3 h",
-              "6 h",
-              "9 h",
-              "12 h",
-              "15 h",
-              "18 h",
-              "21 h"
-            ].asMap().entries.map((e) {
-              return ClockLabel.fromIndex(idx: e.key, length: 8, text: e.value);
-            }).toList(),
-            clockRotation: 180,
-          )
-        : await showTimeRangePicker(
-            context: context,
-            start: TimeOfDay(hour: 0, minute: 0),
-            end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
-            // maxDuration: Duration(days: 1),
-            disabledTime: timerange,
-            interval: Duration(minutes: 1),
-            rotateLabels: true,
-            use24HourFormat: true,
-            minDuration: Duration(hours: 1),
-            strokeWidth: 5,
-            handlerRadius: 5,
-            labelStyle: TextStyle(
-                fontSize: 15, color: Theme.of(context).colorScheme.onSecondary),
-            // autoAdjustLabels: true,
-            // labelOffset: 30,
-            autoAdjustLabels: true,
-            ticks: 8,
-            ticksColor: Colors.black,
-            ticksLength: 10,
-            ticksWidth: 3,
             labels: [
               "00 h",
               "3 h",
@@ -606,41 +606,41 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 30),
+              Container(
+                height: 600,
+                width: 700,
+                padding: EdgeInsets.all(20),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Agents Timeline',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        Expanded(
+                          child: Obx(() {
+                            return TimeSeriesLine(
+                              x.value,
+                              _timeRange.value.startTime.format(context),
+                              _timeRange.value.endTime.format(context),
+                              xAxis.toInt(),
+                              endInt,
+                              check,
+                              _dateTimeRange.value,
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    Container(
-                      height: 600,
-                      width: 700,
-                      padding: EdgeInsets.all(20),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Agents Timeline',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              Expanded(
-                                child: Obx(() {
-                                  return LineChart(
-                                    x.value,
-                                    _timeRange.value.startTime.format(context),
-                                    _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
-                                    _dateTimeRange.value,
-                                  );
-                                }),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                     Container(
                       height: 600,
                       width: 700,
