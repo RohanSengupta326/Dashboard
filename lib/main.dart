@@ -17,7 +17,10 @@ import 'stackedBarChart.dart';
 import 'stackedFillColor.dart';
 import 'stackedArea.dart';
 import 'stackedAreaCustomColor.dart';
-
+import 'scatterPlotSimple.dart';
+import 'scatterPlotShaped.dart';
+import 'numericLineBarCombo.dart';
+import 'pieChartGauge.dart';
 
 void main() {
   runApp(MyApp());
@@ -801,9 +804,130 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Scattered Plot Simple',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return ScatteredPlotSimple(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis.toInt(),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Scattered Plot Shaped',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return ScatteredPlotShaped(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis.toInt(),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: 30),
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: [
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Combo Numeric Line ',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: Obx(() {
+                                  return NumreicLineBarCombo(
+                                    x.value,
+                                    _timeRange.value.startTime.format(context),
+                                    _timeRange.value.endTime.format(context),
+                                    xAxis.toInt(),
+                                    endInt,
+                                    check,
+                                    _dateTimeRange.value,
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 600,
+                      width: 700,
+                      padding: EdgeInsets.all(20),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                'Pie Chart Gauge',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Expanded(
+                                child: PieChartGauge(
+                                  _graphColors,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ])),
             ],
           ),
         ),
