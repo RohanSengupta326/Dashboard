@@ -21,6 +21,10 @@ import 'scatterPlotSimple.dart';
 import 'scatterPlotShaped.dart';
 import 'numericLineBarCombo.dart';
 import 'pieChartGauge.dart';
+import 'tabs.dart';
+import 'tabStyletwo.dart';
+import 'tabThreeStyle.dart';
+import 'tabFourStyle.dart';
 
 void main() {
   runApp(MyApp());
@@ -203,11 +207,10 @@ class _HomePageState extends State<HomePage> {
         // log('equal');
         getTimeRange(context);
         // calling time range picker
+      } else {
+        check = 2;
+        // check 2 means date range is selected, no time range needed, so send this data to show graphs accordingly
       }
-      check = 2;
-      // check 2 means date range is selected, no time range needed, so send this data to show graphs accordingly
-      x.value = 50;
-      // updates Obx to rebuild graph with new data after dateTime selected
     });
   }
 
@@ -479,6 +482,7 @@ class _HomePageState extends State<HomePage> {
         }),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Obx(() {
                 // print(_dateTimeRange.value.start);
@@ -606,6 +610,58 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 30),
+              Text(
+                'Toggle Button',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+              // tab1
+              Container(
+                height: 100,
+                width: 500,
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: Tabs(),
+                ),
+              ),
+              Text(
+                'GestureDetector with Container',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+              // tab2
+              Container(
+                height: 100,
+                width: 500,
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: TabStyleTwo(),
+                ),
+              ),
+
+              Text(
+                'ElevatedButton',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+              // tab3
+              Container(
+                height: 100,
+                width: 500,
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: TabThreeStyle(),
+                ),
+              ),
+              Text(
+                'TextButton',
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+              Container(
+                height: 100,
+                width: 500,
+                padding: EdgeInsets.all(8),
+                child: Center(
+                  child: TabFourStyle(),
+                ),
+              ),
               Container(
                 height: 600,
                 width: 700,
@@ -623,8 +679,8 @@ class _HomePageState extends State<HomePage> {
                           child: Obx(() {
                             return TimeSeriesLine(
                               x.value,
-                              _timeRange.value.startTime.format(context),
-                              _timeRange.value.endTime.format(context),
+                              _timeRange.value.startTime,
+                              _timeRange.value.endTime,
                               xAxis.toInt(),
                               endInt,
                               check,
