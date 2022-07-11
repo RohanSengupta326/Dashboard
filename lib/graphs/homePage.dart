@@ -28,7 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<MaterialColor> _graphColors = [
+  final List<MaterialColor> _graphColors =  [
     Colors.red,
     Colors.green,
     Colors.amber,
@@ -39,15 +39,12 @@ class _HomePageState extends State<HomePage> {
     Colors.brown,
   ];
 
-  var x = 0.obs,
-      y = 0.obs,
-      xAxis = 0.0,
-      endInt = 0.0,
-      check = -1,
-      l = -1,
-      m = -1,
-      n = -1,
-      def = -1;
+  var graphData1 = 0.obs,
+      graphData2 = 0.obs,
+      selectedStartingTime = 0.0,
+      selectedEndTime = 0.0,
+      isDateHourMinutesToShow = -1,
+      isDefaultTime = -1;
   double? phoneWidth = GetPlatform.isAndroid ? Get.width : 700;
 
   var _dateTimeRange =
@@ -144,15 +141,15 @@ class _HomePageState extends State<HomePage> {
         getTimeRange(context);
         // calling time range picker
       } else {
-        check = 2;
-        // check 2 means date range is selected, no time range needed, so send this data to show graphs accordingly
+        isDateHourMinutesToShow = 2;
+        // isDateHourMinutesToShow 2 means date range is selected, no time range needed, so send this data to show graphs accordingly
       }
     });
   }
 
   Widget gotTimeRange(BuildContext context) {
     // body after timeRange selected
-    if (def == -1) {
+    if (isDefaultTime == -1) {
       busyAgents();
       // calling this function here to show agents in graph who are busy when default Time range is selected, def changes when user selects
       // different time range
@@ -324,7 +321,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> onRefresh() async {
-    y.value = Random().nextInt(100) + 1;
+    graphData2.value = Random().nextInt(100) + 1;
     // just chaning random obs value so that graph rebuilds
   }
 
@@ -338,12 +335,12 @@ class _HomePageState extends State<HomePage> {
     var startInt = double.parse(
         '${start.toString().substring(10, 12)}.${start.toString().substring(13, 15)}');
     // start = TimeOfDay(18:00) like this so cutting the string to 18 only then converting to double
-    endInt = double.parse(
+    selectedEndTime = double.parse(
         '${end.toString().substring(10, 12)}.${end.toString().substring(13, 15)}');
 
     // log(start.toString().substring(10, 12));
     // log(end.toString().substring(10, 12));
-    var diff = endInt - startInt;
+    var diff = selectedEndTime - startInt;
     //if diff == 1 then 1 hour range is selected no date range
     // if(diff == 1.0){
     //   print('true');
@@ -359,29 +356,29 @@ class _HomePageState extends State<HomePage> {
     // log(end.toString());
 
     if (diff == 1.0) {
-      check = 0;
-      // check = 0 means single date is selected
-      xAxis = startInt;
-      // startInt + 5, until it reaches endInt as xAxis of graph
-      x.value = 5;
+      isDateHourMinutesToShow = 0;
+      // isDateHourMinutesToShow = 0 means single date is selected
+      selectedStartingTime = startInt;
+      // startInt + 5, until it reaches selectedEndTime as xAxis of graph
+      graphData1.value = 5;
     }
-    // if (startInt == 00 && endInt == 3) {
+    // if (startInt == 00 && selectedEndTime == 3) {
     //   x.value = 100;
-    // } else if (startInt == 00 && endInt == 12) {
+    // } else if (startInt == 00 && selectedEndTime == 12) {
     //   x.value = 150;
-    // } else if (startInt == 00 && endInt == 15) {
+    // } else if (startInt == 00 && selectedEndTime == 15) {
     //   x.value = 170;
-    // } else if (startInt == 00 && endInt == 18) {
+    // } else if (startInt == 00 && selectedEndTime == 18) {
     //   x.value = 200;
-    // } else if (startInt == 00 && endInt == 23) {
+    // } else if (startInt == 00 && selectedEndTime == 23) {
     //   x.value = 250;
     // }
 
-    // startInt + 1 , till endInt hour as xAxis
+    // startInt + 1 , till selectedEndTime hour as xAxis
     else if (diff != 1.0) {
-      check = 1;
-      xAxis = startInt;
-      x.value = 20;
+      isDateHourMinutesToShow = 1;
+      selectedStartingTime = startInt;
+      graphData1.value = 20;
     }
   }
 
@@ -404,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                     TextStyle(color: Theme.of(context).colorScheme.onPrimary),
               ),
               onPressed: () {
-                def = 0;
+                isDefaultTime = 0;
                 // user pressed button so remove default date by changing def = 0
                 getDateRange(context);
               },
@@ -427,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  def == -1
+                  isDefaultTime == -1
                       // show default or not
                       ? gotTimeRange(context)
                       : _dateTimeRange.value.start == _dateTimeRange.value.end
@@ -478,7 +475,7 @@ class _HomePageState extends State<HomePage> {
                                     height: 10.0,
                                   ),
                                   Expanded(child: Obx(() {
-                                    return SimpleBarChart(y.value);
+                                    return SimpleBarChart(graphData2.value);
                                   })),
                                 ])))),
                     //
@@ -498,14 +495,14 @@ class _HomePageState extends State<HomePage> {
                                   Expanded(
                                     child: Obx(() {
                                       return TimeLineChart(
-                                        x.value,
+                                        graphData1.value,
                                         _timeRange.value.startTime
                                             .format(context),
                                         _timeRange.value.endTime
                                             .format(context),
-                                        xAxis,
-                                        endInt,
-                                        check,
+                                        selectedStartingTime,
+                                        selectedEndTime,
+                                        isDateHourMinutesToShow,
                                         _dateTimeRange.value,
                                       );
                                     }),
@@ -527,13 +524,13 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return QbarChart(
-                                      x.value,
+                                      graphData1.value,
                                       _timeRange.value.startTime
                                           .format(context),
                                       _timeRange.value.endTime.format(context),
-                                      xAxis,
-                                      endInt,
-                                      check,
+                                      selectedStartingTime,
+                                      selectedEndTime,
+                                      isDateHourMinutesToShow,
                                       _dateTimeRange.value);
                                 }),
                               ),
@@ -614,12 +611,12 @@ class _HomePageState extends State<HomePage> {
                         Expanded(
                           child: Obx(() {
                             return TimeSeriesLine(
-                              x.value,
+                              graphData1.value,
                               _timeRange.value.startTime,
                               _timeRange.value.endTime,
-                              xAxis.toInt(),
-                              endInt,
-                              check,
+                              selectedStartingTime.toInt(),
+                              selectedEndTime,
+                              isDateHourMinutesToShow,
                               _dateTimeRange.value,
                             );
                           }),
@@ -649,12 +646,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return StackedBar(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis,
-                                    endInt,
-                                    check,
+                                    selectedStartingTime,
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -680,12 +677,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return StackedFillColor(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis,
-                                    endInt,
-                                    check,
+                                    selectedStartingTime,
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -715,8 +712,8 @@ class _HomePageState extends State<HomePage> {
                               //       _timeRange.value.startTime.format(context),
                               //       _timeRange.value.endTime.format(context),
                               //       xAxis,
-                              //       endInt,
-                              //       check,
+                              //       selectedEndTime,
+                              //       isDateHourMinutesToShow,
                               //       _dateTimeRange.value,
                               //     );
                               //   }),
@@ -750,12 +747,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return StackedArea(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
+                                    selectedStartingTime.toInt(),
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -781,12 +778,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return StackedAreaCustomColor(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
+                                    selectedStartingTime.toInt(),
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -812,12 +809,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return ScatteredPlotSimple(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
+                                    selectedStartingTime.toInt(),
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -843,12 +840,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return ScatteredPlotShaped(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
+                                    selectedStartingTime.toInt(),
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
@@ -881,12 +878,12 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                 child: Obx(() {
                                   return NumreicLineBarCombo(
-                                    x.value,
+                                    graphData1.value,
                                     _timeRange.value.startTime.format(context),
                                     _timeRange.value.endTime.format(context),
-                                    xAxis.toInt(),
-                                    endInt,
-                                    check,
+                                    selectedStartingTime.toInt(),
+                                    selectedEndTime,
+                                    isDateHourMinutesToShow,
                                     _dateTimeRange.value,
                                   );
                                 }),
