@@ -28,7 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<MaterialColor> _graphColors =  [
+  final List<MaterialColor> _graphColors = [
     Colors.red,
     Colors.green,
     Colors.amber,
@@ -338,22 +338,7 @@ class _HomePageState extends State<HomePage> {
     selectedEndTime = double.parse(
         '${end.toString().substring(10, 12)}.${end.toString().substring(13, 15)}');
 
-    // log(start.toString().substring(10, 12));
-    // log(end.toString().substring(10, 12));
     var diff = selectedEndTime - startInt;
-    //if diff == 1 then 1 hour range is selected no date range
-    // if(diff == 1.0){
-    //   print('true');
-    // }
-    // log(diff.toString());
-    // var intTime =
-    //     double.parse(start.substring(0, 2)) - double.parse(end.substring(0, 2));
-    // log(intTime.toString());
-    // print(start.toString());
-    // x.value = 200;
-    // log(start.toString());
-    // log('\n');
-    // log(end.toString());
 
     if (diff == 1.0) {
       isDateHourMinutesToShow = 0;
@@ -362,17 +347,6 @@ class _HomePageState extends State<HomePage> {
       // startInt + 5, until it reaches selectedEndTime as xAxis of graph
       graphData1.value = 5;
     }
-    // if (startInt == 00 && selectedEndTime == 3) {
-    //   x.value = 100;
-    // } else if (startInt == 00 && selectedEndTime == 12) {
-    //   x.value = 150;
-    // } else if (startInt == 00 && selectedEndTime == 15) {
-    //   x.value = 170;
-    // } else if (startInt == 00 && selectedEndTime == 18) {
-    //   x.value = 200;
-    // } else if (startInt == 00 && selectedEndTime == 23) {
-    //   x.value = 250;
-    // }
 
     // startInt + 1 , till selectedEndTime hour as xAxis
     else if (diff != 1.0) {
@@ -402,7 +376,7 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () {
                 isDefaultTime = 0;
-                // user pressed button so remove default date by changing def = 0
+                // user pressed button so remove default date by changing isDefaultTime = 0
                 getDateRange(context);
               },
             ),
@@ -418,7 +392,6 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Obx(() {
-                // print(_dateTimeRange.value.start);
                 return Column(children: [
                   gotDateRange(context),
                   const SizedBox(
@@ -605,7 +578,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Agents Timeline',
+                          'TimeSeriesChart',
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         Expanded(
@@ -687,37 +660,6 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 }),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 600,
-                      width: 700,
-                      padding: EdgeInsets.all(20),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Time Series Simple',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              // Expanded(
-                              //   child: Obx(() {
-                              //     return StackedFillColor(
-                              //       x.value,
-                              //       _timeRange.value.startTime.format(context),
-                              //       _timeRange.value.endTime.format(context),
-                              //       xAxis,
-                              //       selectedEndTime,
-                              //       isDateHourMinutesToShow,
-                              //       _dateTimeRange.value,
-                              //     );
-                              //   }),
-                              // ),
                             ],
                           ),
                         ),
