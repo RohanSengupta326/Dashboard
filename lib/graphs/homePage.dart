@@ -209,13 +209,13 @@ class _HomePageState extends State<HomePage> {
   Future<void> getTimeRange(BuildContext context) async {
     // print(_dateTimeRange.value.start.toString().substring(0, 10));
     // print(DateTime.now().toString().substring(0, 10));
-    var temp = false, timerange;
+    var temp = false, disableTimeRange;
 
     if ((_dateTimeRange.value.start.toString().substring(0, 10) ==
             _dateTimeRange.value.end.toString().substring(0, 10)) &&
         (_dateTimeRange.value.start.toString().substring(0, 10) ==
             DateTime.now().toString().substring(0, 10))) {
-      timerange = TimeRange(
+      disableTimeRange = TimeRange(
           // anytime in the future= after current time , time cant be selected, only from 12 am to current time of day
           startTime: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
           endTime: TimeOfDay(hour: 0, minute: 0));
@@ -225,7 +225,7 @@ class _HomePageState extends State<HomePage> {
             _dateTimeRange.value.end.toString().substring(0, 10)) &&
         (_dateTimeRange.value.start.toString().substring(0, 10) !=
             DateTime.now().toString().substring(0, 10))) {
-      timerange = null;
+      disableTimeRange = null;
     }
     // print(temp);
     final newTimeRange = GetPlatform.isAndroid
@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
             start: TimeOfDay(hour: 0, minute: 0),
             end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
             // maxDuration: Duration(days: 1),
-            disabledTime: timerange,
+            disabledTime: disableTimeRange,
             interval: Duration(minutes: 1),
             rotateLabels: true,
             use24HourFormat: true,
@@ -288,7 +288,7 @@ class _HomePageState extends State<HomePage> {
             end: TimeOfDay(hour: TimeOfDay.now().hour, minute: 0),
             // current hour minus minutes, 11:35 -> 11
             maxDuration: Duration(days: 1),
-            disabledTime: timerange,
+            disabledTime: disableTimeRange,
             interval: Duration(minutes: 1),
             use24HourFormat: true,
             minDuration: Duration(hours: 1),
